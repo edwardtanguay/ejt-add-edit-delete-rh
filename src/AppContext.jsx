@@ -92,18 +92,28 @@ export const AppProvider = ({ children }) => {
 		};
 		switch (action.type) {
 			case 'saveItem':
-				const response = await axios.put(
-					`http://localhost:4555/germanNouns/${item.id}`,
-					apiItem
-				);
-				if ([200,201].includes(response.status)) {
-					dispatchCore(action);
-				} else {
+				try {
+					const response = await axios.put(
+						`http://localhost:4555/germanNouns/${item.id}`,
+						apiItem
+					);
+					if ([200, 201].includes(response.status)) {
+						dispatchCore(action);
+					} else {
+						dispatchCore({
+							type: 'handleFailedSaveItem',
+							payload: {
+								item,
+								message: `error: ${response.status}`,
+							},
+						});
+					}
+				} catch (e) {
 					dispatchCore({
 						type: 'handleFailedSaveItem',
 						payload: {
 							item,
-							message: `error: ${response.status}`,
+							message: `Error: API not available`,
 						},
 					});
 				}
