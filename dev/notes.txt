@@ -1,8 +1,11 @@
 - x get edit button to work
 - x create Row component and pass parameters
--  .. when edit button clicked
-	- .. show input fields, hide text fields
-	- hide delete/add buttons
-	- show clear/save buttons
-	- style message
+- x when edit button clicked
+	- x show input fields, hide text fields
+	- x hide delete/add buttons
+	- x style message
+	- x show clear/save buttons
+- x handle Clear button 
+- x fix key issue (String)
+- .. handle Save button 
 

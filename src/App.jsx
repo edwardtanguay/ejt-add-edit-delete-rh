@@ -6,11 +6,6 @@ import './App.scss';
 function App() {
 	const { state, dispatch } = useContext(AppContext);
 
-	// const handleEditButton = (item) => {
-	// 	item.isEditing = !item.isEditing;
-	// 	setGermanNouns([...germanNouns]);
-	// }
-
 	return (
 		<div className="App">
 			<h1>Site with useContext/useReducer</h1>
@@ -26,11 +21,10 @@ function App() {
 			<hr />
 			<p>There are {state.germanNouns.length} nouns.</p>
 			<div className="germanNounArea">
-				{state.germanNouns.map((item) => {
+				{state.germanNouns.map((item,i) => {
 					return (
-						<fieldset className="germanNoun" key={item.id}>
+						<fieldset className="germanNoun" key={String(item.id)}>
 							<legend>ID: {item.id}</legend>
-
 							<GermanNounFormRow
 								item={item}
 								label="Article"
@@ -52,18 +46,42 @@ function App() {
 							<div className="buttonRow">
 								<div className="message">{item.message}</div>
 								<div className="buttonArea">
-									<button
-										onClick={() =>
-											dispatch({
-												type: 'toggleEditStatus',
-												payload: item,
-											})
-										}
-									>
-										Edit
-									</button>
-									<button>Delete</button>
-									<button>Add</button>
+									{!item.isEditing && (
+										<>
+											<button
+												onClick={() =>
+													dispatch({
+														type: 'toggleEditStatus',
+														payload: item,
+													})
+												}
+											>
+												Edit
+											</button>
+											<button>Delete</button>
+											<button>Add</button>
+										</>
+									)}
+									{item.isEditing && (
+										<>
+											<button
+												onClick={() =>
+													dispatch({
+														type: 'clearEditStatus',
+														payload: item,
+													})
+												}
+											>Clear</button>
+											<button
+												onClick={() =>
+													dispatch({
+														type: 'saveItem',
+														payload: item,
+													})
+												}
+											>Save</button>
+										</>
+									)}
 								</div>
 							</div>
 						</fieldset>

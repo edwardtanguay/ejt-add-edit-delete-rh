@@ -13,6 +13,7 @@ function reducer(state, action) {
 	let item = null;
 	let property = null;
 	let value = null;
+	let originalItem = null;
 	switch (action.type) {
 		case 'increaseCount':
 			_state.count++;
@@ -27,6 +28,20 @@ function reducer(state, action) {
 			item = action.payload;
 			item.isEditing = !item.isEditing;
 			item.message = item.isEditing ? 'Editing item...' : '';
+			break;
+		case 'saveItem':
+			item = action.payload;
+			item.isEditing = false;
+			item.message = '';
+			break;
+		case 'clearEditStatus':
+			item = action.payload;
+			originalItem = item.originalItem;
+			item.isEditing = false;
+			item.article = originalItem.article;
+			item.singular = originalItem.singular;
+			item.plural = originalItem.plural;
+			item.message = '';
 			break;
 		case 'changeItemRowValue':
 			item = action.payload.item;
@@ -48,6 +63,7 @@ export const AppProvider = ({ children }) => {
 			_germanNouns.forEach(noun => {
 				noun.isEditing = false;
 				noun.message = '';
+				noun.originalItem = { ...noun };
 			})
 			dispatch({ type: 'loadGermanNouns', payload: _germanNouns });
 		})();
