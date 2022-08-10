@@ -5,7 +5,7 @@ export const AppContext = createContext();
 
 const initialState = {
 	count: 0,
-	germanNouns: ['nnn']
+	germanNouns: ['nnn'],
 };
 
 function reducer(state, action) {
@@ -14,6 +14,7 @@ function reducer(state, action) {
 	let property = null;
 	let value = null;
 	let originalItem = null;
+	let message = null;
 	switch (action.type) {
 		case 'increaseCount':
 			_state.count++;
@@ -28,6 +29,17 @@ function reducer(state, action) {
 			item = action.payload;
 			item.isEditing = !item.isEditing;
 			item.message = item.isEditing ? 'Editing item...' : '';
+			break;
+		case 'handleFailedSaveItem':
+			item = action.payload.item;
+			message = action.payload.message;
+			originalItem = item.originalItem;
+
+			item.isEditing = false;
+			item.article = originalItem.article;
+			item.singular = originalItem.singular;
+			item.plural = originalItem.plural;
+			item.message = message;
 			break;
 		case 'saveItem':
 			item = action.payload;
@@ -49,7 +61,6 @@ function reducer(state, action) {
 			value = action.payload.value;
 			item[property] = value;
 			break;
-
 	}
 	return _state;
 }
@@ -59,28 +70,58 @@ export const AppProvider = ({ children }) => {
 
 	useEffect(() => {
 		(async () => {
-			const _germanNouns = ((await axios.get('http://localhost:4555/germanNouns')).data);
-			_germanNouns.forEach(noun => {
+			const _germanNouns = (
+				await axios.get('http://localhost:4555/germanNouns')
+			).data;
+			_germanNouns.forEach((noun) => {
 				noun.isEditing = false;
 				noun.message = '';
 				noun.originalItem = { ...noun };
-			})
+			});
 			dispatchCore({ type: 'loadGermanNouns', payload: _germanNouns });
 		})();
 	}, []);
 
 	const dispatch = async (action) => {
 		const item = action.payload;
+		const apiItem = {
+			id: item.id,
+			article: item.article,
+			singular: item.singular,
+			plural: item.plural,
+		};
 		switch (action.type) {
 			case 'saveItem':
-				const response = await axios.put(`http://localhost:4555/germanNouns/${item.id}`, item);
+				const response = await axios.put(
+					`http://localhost:4555/germanNouns/${item.id}`,
+					apiItem
+				);
+				if ([200,201].includes(response.status)) {
+					dispatchCore(action);
+				} else {
+					dispatchCore({
+						type: 'handleFailedSaveItem',
+						payload: {
+							item,
+							message: `error: ${response.status}`,
+						},
+					});
+				}
+				break;
+			default:
+				dispatchCore(action);
 				break;
 		}
-		dispatchCore(action);
-	}
+	};
 
-	return <AppContext.Provider value={{
-		state,
-		dispatch
-	}}>{children}</AppContext.Provider>;
+	return (
+		<AppContext.Provider
+			value={{
+				state,
+				dispatch,
+			}}
+		>
+			{children}
+		</AppContext.Provider>
+	);
 };
