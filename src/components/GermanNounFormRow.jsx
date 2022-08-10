@@ -1,13 +1,13 @@
 import { useContext } from 'react';
 import { AppContext } from '../AppContext';
 
-export const GermanNounFormRow = ({ item, label, variable }) => {
+export const GermanNounFormRow = ({ item, label, variable, adding }) => {
 	const { state, dispatch } = useContext(AppContext);
 
 	return (
 		<div className="row">
 			<label>{label}</label>
-			{!item.isEditing ? (
+			{!item.isEditing && !adding ? (
 				<div className="value">{item[variable]}</div>
 			) : (
 				<input

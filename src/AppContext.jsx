@@ -6,6 +6,13 @@ export const AppContext = createContext();
 const initialState = {
 	count: 0,
 	germanNouns: ['nnn'],
+	addItem: {
+		article: '',
+		singular: '',
+		plural: '',
+	},
+	isAdding: false,
+	addMessage: '',
 };
 
 function reducer(state, action) {
@@ -61,6 +68,8 @@ function reducer(state, action) {
 			value = action.payload.value;
 			item[property] = value;
 			break;
+		case 'beginAddingItem':
+			_state.isAdding = true;
 	}
 	return _state;
 }
@@ -84,12 +93,15 @@ export const AppProvider = ({ children }) => {
 
 	const dispatch = async (action) => {
 		const item = action.payload;
-		const apiItem = {
-			id: item.id,
-			article: item.article,
-			singular: item.singular,
-			plural: item.plural,
-		};
+		const apiItem = {};
+		if (item) {
+			apiItem = {
+				id: item.id,
+				article: item.article,
+				singular: item.singular,
+				plural: item.plural,
+			};
+		}
 		switch (action.type) {
 			case 'saveItem':
 				try {

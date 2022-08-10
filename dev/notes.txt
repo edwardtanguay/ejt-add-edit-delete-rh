@@ -7,5 +7,8 @@
 	- x show clear/save buttons
 - x handle Clear button 
 - x fix key issue (String)
-- .. handle Save button 
+- x handle Save button 
+- .. handle Add button
+
+
 

@@ -2,7 +2,7 @@
   "germanNouns": [
     {
       "id": 1,
-      "article": "die555555",
+      "article": "die",
       "singular": "Notiz",
       "plural": "die Notizen"
     },
@@ -14,6 +14,18 @@
     },
     {
       "id": 3,
+      "article": "der",
+      "singular": "Workshop",
+      "plural": "die Workshops"
+    },
+    {
+      "id": 4,
+      "article": "der",
+      "singular": "Workshop",
+      "plural": "die Workshops"
+    },
+    {
+      "id": 5,
       "article": "der",
       "singular": "Workshop",
       "plural": "die Workshops"

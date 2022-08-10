@@ -1,10 +1,19 @@
 import { useContext } from 'react';
 import { AppContext } from './AppContext';
 import { GermanNounFormRow } from './components/GermanNounFormRow';
+import { AddItemBox } from './components/AddItemBox';
 import './App.scss';
 
 function App() {
 	const { state, dispatch } = useContext(AppContext);
+
+	const handleButtonAdd = () => {
+		window.scrollTo({
+			top: 0,
+			behavior: 'smooth',
+		});
+		dispatch({ type: 'beginAddingItem' });
+	};
 
 	return (
 		<div className="App">
@@ -21,7 +30,10 @@ function App() {
 			<hr />
 			<p>There are {state.germanNouns.length} nouns.</p>
 			<div className="germanNounArea">
-				{state.germanNouns.map((item,i) => {
+				{state.isAdding && (
+					<AddItemBox />
+				)}
+				{state.germanNouns.map((item, i) => {
 					return (
 						<fieldset className="germanNoun" key={String(item.id)}>
 							<legend>ID: {item.id}</legend>
@@ -59,7 +71,9 @@ function App() {
 												Edit
 											</button>
 											<button>Delete</button>
-											<button>Add</button>
+											<button onClick={handleButtonAdd}>
+												Add
+											</button>
 										</>
 									)}
 									{item.isEditing && (
@@ -71,7 +85,9 @@ function App() {
 														payload: item,
 													})
 												}
-											>Clear</button>
+											>
+												Clear
+											</button>
 											<button
 												onClick={() =>
 													dispatch({
@@ -79,7 +95,9 @@ function App() {
 														payload: item,
 													})
 												}
-											>Save</button>
+											>
+												Save
+											</button>
 										</>
 									)}
 								</div>
