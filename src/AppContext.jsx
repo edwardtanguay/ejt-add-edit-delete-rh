@@ -55,7 +55,7 @@ function reducer(state, action) {
 }
 
 export const AppProvider = ({ children }) => {
-	const [state, dispatch] = useReducer(reducer, initialState);
+	const [state, dispatchCore] = useReducer(reducer, initialState);
 
 	useEffect(() => {
 		(async () => {
@@ -65,9 +65,19 @@ export const AppProvider = ({ children }) => {
 				noun.message = '';
 				noun.originalItem = { ...noun };
 			})
-			dispatch({ type: 'loadGermanNouns', payload: _germanNouns });
+			dispatchCore({ type: 'loadGermanNouns', payload: _germanNouns });
 		})();
 	}, []);
+
+	const dispatch = async (action) => {
+		const item = action.payload;
+		switch (action.type) {
+			case 'saveItem':
+				const response = await axios.put(`http://localhost:4555/germanNouns/${item.id}`, item);
+				break;
+		}
+		dispatchCore(action);
+	}
 
 	return <AppContext.Provider value={{
 		state,

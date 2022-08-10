@@ -2,9 +2,19 @@
   "germanNouns": [
     {
       "id": 1,
-      "article": "die",
+      "article": "die111",
       "singular": "Notiz",
-      "plural": "die Notizen"
+      "plural": "die Notizen",
+      "isEditing": true,
+      "message": "Editing item...",
+      "originalItem": {
+        "id": 1,
+        "article": "die",
+        "singular": "Notiz",
+        "plural": "die Notizen",
+        "isEditing": false,
+        "message": ""
+      }
     },
     {
       "id": 2,
